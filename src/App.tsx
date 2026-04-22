@@ -214,15 +214,15 @@ for (const guess of submittedGuesses) {
 }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center px-4 py-8">
-      <div className="flex w-full max-w-3xl flex-col items-center gap-10">
+    <div className="h-screen w-full overflow-hidden px-3 py-3 sm:min-h-svh sm:h-auto sm:overflow-visible sm:px-6 sm:py-8">
+      <div className="mx-auto flex h-full w-full max-w-md flex-col items-center justify-around gap-4 sm:h-auto sm:max-w-4xl sm:gap-8">
         {/* Header */}
-        <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-4xl font-black uppercase tracking-[0.3em]">
+        <div className="flex w-full flex-col items-center gap-1.5 px-2 text-center sm:gap-2">
+          <h1 className="text-2xl font-black uppercase tracking-wide sm:text-4xl sm:tracking-widest">
             Codle(?)
           </h1>
 
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-neutral-600">
+          <p className="max-w-full text-xs font-medium uppercase tracking-wide text-neutral-600 sm:text-sm sm:tracking-widest">
             (open to name suggestions)
           </p>
           <p className="text-sm text-neutral-700">{statusMessage}</p>
@@ -242,7 +242,7 @@ for (const guess of submittedGuesses) {
         {/* Action Button */}
         {isGameOver ? (
           <button
-            className="cursor-pointer rounded bg-black px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-neutral-800"
+            className="cursor-pointer rounded bg-black px-5 py-3 text-sm font-semibold uppercase tracking-widest text-white transition hover:bg-neutral-800"
             onClick={startNewGame}
             type="button"
           >
@@ -250,8 +250,8 @@ for (const guess of submittedGuesses) {
           </button>
         ) : null}
 
-        <footer className="flex w-full flex-col items-center gap-3 text-center">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-500">
+        <footer className="flex w-full flex-col items-center gap-2 text-center sm:gap-3">
+          <p className="text-xs font-medium uppercase tracking-widest text-neutral-500">
             Support and follow
           </p>
 
