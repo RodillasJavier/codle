@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import Guesses from "./components/Guesses"
+import Keyboard from "./components/Keyboard"
 
 const ANSWER_WORDS = [
   "array",
@@ -85,7 +86,29 @@ function App() {
   const [currentGuess, setCurrentGuess] = useState('');
   const [gameStatus, setGameStatus] = useState<'playing' | 'won' | 'lost'>('playing');
 
-  const submitGuess = useCallback(() => {
+  const handleLetter = useCallback((letter: string) => {
+    if (gameStatus !== 'playing' || !/^[a-zA-Z]$/.test(letter)) {
+      return;
+    }
+
+    setCurrentGuess((prev) => {
+      if (prev.length >= 5) {
+        return prev;
+      }
+
+      return prev + letter.toLowerCase();
+    });
+  }, [gameStatus]);
+
+  const handleDelete = useCallback(() => {
+    if (gameStatus !== 'playing') {
+      return;
+    }
+
+    setCurrentGuess((prev) => prev.slice(0, -1));
+  }, [gameStatus]);
+
+  const handleSubmit = useCallback(() => {
     if (currentGuess.length !== 5) {
       return;
     }
@@ -94,12 +117,13 @@ function App() {
       return;
     }
 
-    const nextSubmittedGuesses = [...submittedGuesses, evaluateGuess(currentGuess, answer)];
+    const normalizedGuess = currentGuess.toLowerCase();
+    const nextSubmittedGuesses = [...submittedGuesses, evaluateGuess(normalizedGuess, answer)];
 
     setSubmittedGuesses(nextSubmittedGuesses);
     setCurrentGuess("");
 
-    if (currentGuess === answer) {
+    if (normalizedGuess === answer) {
       setGameStatus('won');
       return;
     }
@@ -123,20 +147,17 @@ function App() {
       }
 
       if (e.key === "Enter") {
-        submitGuess();
+        handleSubmit();
         return;
       }
 
       if (e.key === "Backspace") {
-        setCurrentGuess((prev) => prev.slice(0, -1));
+        handleDelete();
         return;
       }
 
       if (/^[a-zA-Z]$/.test(e.key)) {
-        setCurrentGuess((prev) => {
-          if (prev.length >= 5) return prev;
-          return prev + e.key.toLowerCase();
-        });
+        handleLetter(e.key);
       }
     };
 
@@ -145,7 +166,7 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [gameStatus, submitGuess]);
+  }, [gameStatus, handleDelete, handleLetter, handleSubmit]);
 
   const isGameOver = gameStatus !== 'playing';
   const statusMessage = gameStatus === 'won'
@@ -172,6 +193,26 @@ function App() {
     },
   ] as const;
 
+/**
+ * Get the status of each key on the keyboard based on the submitted guesses.
+ * Each letter keeps its best status across all guesses: correct > present > absent.
+ */
+const keyStatuses: Record<string, LetterStatus> = {};
+
+for (const guess of submittedGuesses) {
+  for (const { letter, status } of guess) {
+    const current = keyStatuses[letter];
+
+    const isStatusCorrect = status === 'correct';
+    const isStatusPresent = status === 'present';
+    const isCurrentStatusAbsent = current === 'absent';
+
+    if (!current || isStatusCorrect || (isStatusPresent && isCurrentStatusAbsent)) {
+      keyStatuses[letter] = status;
+    }
+  }
+}
+
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-4 py-8">
       <div className="flex w-full max-w-3xl flex-col items-center gap-10">
@@ -189,6 +230,14 @@ function App() {
 
         {/* Game Board */}
         <Guesses submittedGuesses={submittedGuesses} currentGuess={currentGuess}/>
+
+        <Keyboard
+          disabled={isGameOver}
+          keyStatuses={keyStatuses}
+          onDelete={handleDelete}
+          onEnter={handleSubmit}
+          onKeyPress={handleLetter}
+        />
 
         {/* Action Button */}
         {isGameOver ? (
