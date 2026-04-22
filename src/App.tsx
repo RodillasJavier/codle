@@ -193,7 +193,7 @@ function App() {
         {/* Action Button */}
         {isGameOver ? (
           <button
-            className="rounded bg-black px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-neutral-800 cursor-pointer"
+            className="cursor-pointer rounded bg-black px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-neutral-800"
             onClick={startNewGame}
             type="button"
           >
@@ -201,12 +201,12 @@ function App() {
           </button>
         ) : null}
 
-        <footer className="flex flex-col items-center gap-3 text-center">
+        <footer className="flex w-full flex-col items-center gap-3 text-center">
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-neutral-500">
             Support and follow
           </p>
 
-          <div className="flex flex-wrap min-w-screen items-center justify-center gap-x-12 gap-y-2 text-sm text-neutral-700">
+          <div className="flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-neutral-700 sm:gap-x-12">
             {footerLinks.map(({ href, label }) => (
               <a
                 className="transition hover:text-black hover:underline"
