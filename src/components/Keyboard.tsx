@@ -34,10 +34,10 @@ function getKeyClassName(status?: LetterStatus) {
 
 function Keyboard({ disabled, keyStatuses, onDelete, onEnter, onKeyPress }: KeyboardProps) {
   return (
-    <div className="flex w-full max-w-[min(100%,34rem)] flex-col gap-2 px-1 sm:px-0">
+    <div className="flex w-full max-w-sm flex-col gap-2 sm:max-w-xl">
       {KEYBOARD_ROWS.map((row, rowIndex) => (
         <div
-          className="flex items-center justify-center gap-1.5 sm:gap-2"
+          className="flex w-full items-center justify-center gap-1 sm:gap-2"
           key={rowIndex}
         >
           {row.map((key) => {
@@ -46,7 +46,7 @@ function Keyboard({ disabled, keyStatuses, onDelete, onEnter, onKeyPress }: Keyb
 
             return (
               <button
-                className={`flex flex-1 items-center justify-center rounded px-2 text-xs font-semibold uppercase transition sm:h-14 sm:text-sm ${isActionKey ? 'max-w-[4.75rem]' : ''} ${getKeyClassName(status)} ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.98]'}`}
+                className={`flex min-w-0 items-center justify-center rounded text-xs font-semibold uppercase transition sm:h-14 sm:text-sm ${isActionKey ? 'h-10 shrink-0 px-3 sm:px-4' : 'h-10 flex-1 px-1'} ${getKeyClassName(status)} ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer active:scale-[0.98]'}`}
                 disabled={disabled}
                 key={key}
                 onClick={() => {
@@ -64,7 +64,7 @@ function Keyboard({ disabled, keyStatuses, onDelete, onEnter, onKeyPress }: Keyb
                 }}
                 type="button"
               >
-                {key === 'back' ?  <Delete /> : key}
+                {key === 'back' ? <Delete className="h-4 w-4 sm:h-5 sm:w-5" /> : key}
               </button>
             );
           })}
